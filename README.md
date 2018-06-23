@@ -57,6 +57,22 @@ This framework was created as part of building a specific tool, you can take a
 look at [`coap-browse`][] to see some more complex usage (including decoupling
 the frontend actions from other sorts of events that the backend triggers).
 
+## License
+
+Licensed under either of
+
+ * Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you shall be dual licensed as above, without any
+additional terms or conditions.
+
+
 [`vdom-rsjs`]: https://github.com/Nemo157/vdom-rsjs
 [`virtual-dom`]: https://npmjs.com/package/virtual-dom
 [`coap-browse`]: https://github.com/Nemo157/coap-browse
