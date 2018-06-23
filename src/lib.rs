@@ -31,6 +31,7 @@ struct FullUpdate<A> {
 pub struct Action<Tag> {
     pub tag: Tag,
     pub associated: HashMap<String, String>,
+    #[serde(skip)]
     _private: (),
 }
 
