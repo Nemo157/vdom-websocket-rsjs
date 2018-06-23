@@ -30,12 +30,13 @@ struct FullUpdate<A> {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Action<Tag> {
     pub tag: Tag,
-    associated: HashMap<String, String>,
+    pub associated: HashMap<String, String>,
+    _private: (),
 }
 
 impl<Tag> Action<Tag> {
     pub fn new(tag: Tag) -> Action<Tag> {
-        Action { tag, associated: HashMap::new() }
+        Action { tag, associated: HashMap::new(), _private: () }
     }
 
     pub fn associate(mut self, name: impl Into<Cow<'static, str>>, prop: impl Into<Cow<'static, str>>) -> Action<Tag> {
