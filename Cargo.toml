@@ -1,4 +1,4 @@
-cargo-features = ["edition"]
+cargo-features = ["edition", "rename-dependency"]
 
 [package]
 name = "vdom-websocket-rsjs"
@@ -7,19 +7,30 @@ authors = ["Wim Looman <wim@nemo157.com>"]
 edition = "2018"
 
 [dependencies]
-futures = "0.1"
 serde_derive = "1.0.62"
 serde_json = "1.0.18"
-websocket = "0.20.2"
+tokio = "0.1.7"
 tokio-core = "0.1.17"
 
+[dependencies.futures]
+package = "futures-preview"
+git = "https://github.com/Nemo157/futures-rs"
+branch = "testing-compat"
+features = ["compat"]
+
+[dependencies.futures01]
+package = "futures"
+version = "0.1"
+
 [dependencies.serde]
-features = ["rc"]
 version = "1.0.62"
+features = ["rc"]
 
 [dependencies.vdom-rsjs]
 git = "https://github.com/Nemo157/vdom-rsjs"
 branch = "2018-edition"
 
-[dev-dependencies]
-tokio = "0.1.7"
+
+[dependencies.websocket]
+git = "https://github.com/Nemo157/rust-websocket"
+branch = "send"
