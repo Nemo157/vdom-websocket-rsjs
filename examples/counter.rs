@@ -1,12 +1,4 @@
-#[macro_use]
-extern crate serde_derive;
-
-extern crate futures;
-extern crate tokio;
-extern crate tokio_core;
-extern crate vdom_rsjs;
-extern crate vdom_websocket_rsjs;
-extern crate serde;
+#![warn(rust_2018_idioms)]
 
 use std::time::{Instant, Duration};
 use std::sync::Arc;
@@ -16,6 +8,7 @@ use vdom_rsjs::render::{Render, Cache, TopCache};
 use vdom_websocket_rsjs::Action;
 use tokio::timer::Delay;
 use tokio_core::reactor::{Core, Handle};
+use serde::{Serialize, Deserialize};
 
 use futures::{Sink, Stream, Future, future::{self, Either}};
 use futures::sync::mpsc;
@@ -89,7 +82,7 @@ impl State {
 }
 
 impl Render<Action<ActionTag>> for State {
-    fn render(&self, _cache: &mut Cache<Action<ActionTag>>) -> VNode<Action<ActionTag>> {
+    fn render(&self, _cache: &mut dyn Cache<Action<ActionTag>>) -> VNode<Action<ActionTag>> {
         VTag::new("div")
             .child(self.count.to_string())
             .child(VTag::new("br"))

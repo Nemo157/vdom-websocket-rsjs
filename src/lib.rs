@@ -1,12 +1,4 @@
-#[macro_use]
-extern crate serde_derive;
-
-extern crate futures;
-extern crate serde;
-extern crate serde_json;
-extern crate tokio_core;
-extern crate vdom_rsjs;
-extern crate websocket;
+#![warn(rust_2018_idioms)]
 
 use std::sync::Arc;
 use std::fmt::Debug;
@@ -15,7 +7,7 @@ use std::borrow::Cow;
 
 use websocket::message::OwnedMessage;
 use websocket::server::InvalidConnection;
-use websocket::async::Server;
+use websocket::r#async::Server;
 
 use tokio_core::reactor::Handle;
 use futures::{Future, Sink, Stream, stream};
