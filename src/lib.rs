@@ -1,14 +1,4 @@
-#![feature(rust_2018_preview)]
-
-#[macro_use]
-extern crate serde_derive;
-
-extern crate futures;
-extern crate serde;
-extern crate serde_json;
-extern crate tokio_core;
-extern crate vdom_rsjs;
-extern crate websocket;
+#![feature(raw_identifiers)]
 
 use std::sync::Arc;
 use std::fmt::Debug;
@@ -17,12 +7,13 @@ use std::borrow::Cow;
 
 use websocket::message::OwnedMessage;
 use websocket::server::InvalidConnection;
-use websocket::async::Server;
+use websocket::r#async::Server;
 
 use tokio_core::reactor::Handle;
 use futures::{Future, Sink, Stream, stream};
 use vdom_rsjs::VNode;
 use serde::{Serialize, Deserialize};
+use serde_derive::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct FullUpdate<A> {
