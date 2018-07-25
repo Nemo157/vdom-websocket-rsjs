@@ -16,6 +16,7 @@ version = "1.0.62"
 
 [dependencies.vdom-rsjs]
 git = "https://github.com/Nemo157/vdom-rsjs"
+branch = "2018-edition"
 
 [dev-dependencies]
 tokio = "0.1.7"
