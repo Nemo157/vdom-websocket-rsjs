@@ -16,7 +16,7 @@ tokio-core = "0.1.17"
 package = "futures-preview"
 git = "https://github.com/Nemo157/futures-rs"
 branch = "testing-compat"
-features = ["compat"]
+features = ["tokio-compat"]
 
 [dependencies.futures01]
 package = "futures"

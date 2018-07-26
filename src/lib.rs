@@ -14,7 +14,7 @@ use tokio_core::reactor::Handle;
 use tokio::executor::thread_pool::ThreadPool;
 use futures01::{Future as Future01, Stream as Stream01, Sink as Sink01};
 use futures::{Future, Sink, Stream, stream, FutureExt, StreamExt, future, TryStreamExt, TryFutureExt, SinkExt};
-use futures::compat::Executor01CompatExt;
+use futures::compat::{Executor01CompatExt, Future01Ext};
 use vdom_rsjs::VNode;
 use serde::{Serialize, Deserialize};
 use serde_derive::{Serialize, Deserialize};
@@ -52,7 +52,7 @@ where ActionTag: Serialize + for<'a> Deserialize<'a> + Send + Debug,
     let server = Server::bind("127.0.0.1:8080", &handle).unwrap();
     let pool = ThreadPool::new();
 
-    let fut = server.incoming()
+    server.incoming()
         .map_err(|InvalidConnection { error, .. }| error)
         .for_each(move |(upgrade, addr)| {
             println!("Got a connection from {}", addr);
@@ -63,7 +63,6 @@ where ActionTag: Serialize + for<'a> Deserialize<'a> + Send + Debug,
             }
 
             let (client_sink, client_stream) = new_client();
-            let sender = pool.sender();
             let f = upgrade
                 .use_protocol("vdom-websocket-rsjs")
                 .accept()
@@ -100,13 +99,13 @@ where ActionTag: Serialize + for<'a> Deserialize<'a> + Send + Debug,
                             }
                         })
                         .map_err(|e| println!("error handling ws_stream: {:?}", e))
-                        .forward(client_sink.compat(sender.compat()));
+                        .forward(client_sink.tokio_compat());
                     let outgoing = client_stream
                         .map(|tree| serde_json::to_string(&FullUpdate { tree }).unwrap())
                         .map(|json| OwnedMessage::Text(json))
                         .chain(stream::once(future::ready(OwnedMessage::Close(None))))
                         .map(Ok::<_, ()>)
-                        .compat(sender.compat())
+                        .tokio_compat()
                         .forward(ws_sink.sink_map_err(|e| println!("error on ws_sink: {:?}", e)));
                     incoming.join(outgoing)
                 });
@@ -114,6 +113,7 @@ where ActionTag: Serialize + for<'a> Deserialize<'a> + Send + Debug,
             pool.spawn(f.map(|_| ()).map_err(|err| println!("accept error: {:?}", err)));
             Ok(())
         })
-        .map_err(|err| println!("Server error: {:?}", err));
-    ::futures::compat::Compat::from_01(fut).map(|x| x.unwrap())
+        .map_err(|err| println!("Server error: {:?}", err))
+        .compat()
+        .map(|x| x.unwrap())
 }
