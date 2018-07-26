@@ -28,7 +28,7 @@ features = ["rc"]
 
 [dependencies.vdom-rsjs]
 git = "https://github.com/Nemo157/vdom-rsjs"
-branch = "2018-edition"
+branch = "send"
 
 
 [dependencies.websocket]
