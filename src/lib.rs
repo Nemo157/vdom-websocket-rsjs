@@ -13,7 +13,7 @@ use websocket::r#async::Server;
 use tokio_core::reactor::Handle;
 use futures01::{Future as Future01, Stream as Stream01, Sink as Sink01};
 use futures::{Future, Sink, Stream, stream, FutureExt, StreamExt, future, TryStreamExt, TryFutureExt, SinkExt};
-use futures::compat::Future01Ext;
+use futures::compat::{Future01CompatExt, TokioDefaultExecutor};
 use vdom_rsjs::VNode;
 use serde::{Serialize, Deserialize};
 use serde_derive::{Serialize, Deserialize};
@@ -63,7 +63,7 @@ where ActionTag: Serialize + for<'a> Deserialize<'a> + Send + Debug,
 
             let f = new_client()
                 .map(Ok::<_, ()>)
-                .tokio_compat()
+                .compat(TokioDefaultExecutor)
                 .and_then(|(client_sink, client_stream)| {
                     upgrade
                         .use_protocol("vdom-websocket-rsjs")
@@ -101,13 +101,13 @@ where ActionTag: Serialize + for<'a> Deserialize<'a> + Send + Debug,
                                     }
                                 })
                                 .map_err(|e| println!("error handling ws_stream: {:?}", e))
-                                .forward(client_sink.tokio_compat());
+                                .forward(client_sink.compat(TokioDefaultExecutor));
                             let outgoing = client_stream
                                 .map(|tree| serde_json::to_string(&FullUpdate { tree }).unwrap())
                                 .map(|json| OwnedMessage::Text(json))
                                 .chain(stream::once(future::ready(OwnedMessage::Close(None))))
                                 .map(Ok::<_, ()>)
-                                .tokio_compat()
+                                .compat(TokioDefaultExecutor)
                                 .forward(ws_sink.sink_map_err(|e| println!("error on ws_sink: {:?}", e)));
                             incoming.join(outgoing)
                         })
