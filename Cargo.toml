@@ -18,4 +18,4 @@ version = "1.0.62"
 git = "https://github.com/Nemo157/vdom-rsjs"
 
 [dev-dependencies]
-tokio = "0.1.7"
+tokio = "1.8.4"
